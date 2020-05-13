@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">WorldWeather</string>
+    <string name="api_key">bf13072f60cdcc656121cf8eaf637e10</string>
+    <string name="weather_icon">weather icon</string>
+    <string name="search_hint">Type any word here..</string>
+    <string-array name="cities_codes">
+        <item>293397</item> // Tel Aviv
+        <item>2643743</item> // London
+        <item>2988507</item> // Paris
+        <item>3169070</item> // Rome
+        <item>3117735</item> // Madrid
+        <item>2950159</item> // Berlin
+        <item>524901</item> // Moscow
+    </string-array>
+</resources>

@@ -1,0 +1,61 @@
+package zfani.assaf.world_weather.ui.main
+
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.DividerItemDecoration
+import kotlinx.android.synthetic.main.main_fragment.*
+import zfani.assaf.world_weather.App
+import zfani.assaf.world_weather.R
+import zfani.assaf.world_weather.utils.WeatherAdapter
+import java.util.*
+
+class MainFragment : Fragment() {
+
+    companion object {
+        val TAG: String = MainFragment::class.java.simpleName
+        fun newInstance() = MainFragment()
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        return inflater.inflate(R.layout.main_fragment, container, false)
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        val viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+        val weatherAdapter = WeatherAdapter(false)
+        rvWeatherList.adapter = weatherAdapter
+        rvWeatherList.addItemDecoration(
+            DividerItemDecoration(
+                context,
+                DividerItemDecoration.VERTICAL
+            )
+        )
+        App.isCelsius.observe(viewLifecycleOwner, Observer {
+            viewModel.getWeatherList(it)?.observe(viewLifecycleOwner, Observer { list ->
+                App.text.observe(viewLifecycleOwner, Observer { text ->
+                    if (text.isEmpty()) {
+                        weatherAdapter.submitList(list)
+                    } else {
+                        weatherAdapter.submitList(list.filter { weather ->
+                            weather.cityName.toLowerCase(Locale.getDefault())
+                                .contains(text) || weather.weatherDesc.toLowerCase(
+                                Locale.getDefault()
+                            ).contains(text)
+                        })
+                    }
+                })
+
+            })
+        })
+    }
+}
